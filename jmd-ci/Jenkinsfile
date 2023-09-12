@@ -30,7 +30,7 @@ pipeline {
                 script {
                     dir ('CI-Pipeline/application-code-g') {
                     env.SONAR_TOKEN = "${SONAR_TOKEN}"
-                    sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=august_project_job_ci'
+                    sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=CI-Pipeline'
                     }
                 }
             }  
@@ -40,7 +40,7 @@ pipeline {
             steps {  
                 echo 'Building jar' 
                 script {
-                    dir ('application-code-g') {
+                    dir ('CI-Pipeline/application-code-g') {
                         sh 'mvn install -DskipTests,spring.profiles.active=mysql'
                     }
                 }
@@ -65,7 +65,7 @@ pipeline {
         stage ('Docker Image Build') {  
             steps {
                     script {   
-                        dir ('application-code-g') {
+                        dir ('CI-Pipeline/application-code-g') {
                             dockerTag = params.REPO + ":" + "${IMAGE_TAG}"
                             docker.withRegistry( params.ECRURL, 'ecr:us-east-2:aws-creds' ) {
                             myImage = docker.build(dockerTag)
@@ -78,7 +78,7 @@ pipeline {
         stage ('Docker scan with TRIVY') {  
             steps {
                     script {   
-                        dir ('application-code-g') {
+                        dir ('CI-Pipeline/application-code-g') {
                             sh ("docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD:/tmp/.cache/ aquasec/trivy:0.10.0 ${params.REPO}:${IMAGE_TAG}")
                     }
                 }
@@ -97,7 +97,7 @@ pipeline {
         stage ('Docker image Push to ECR') {  
             steps {
                     script {   
-                        dir ('application-code-g') {
+                        dir ('CI-Pipeline/application-code-g') {
                             dockerTag = params.REPO + ":" + "${IMAGE_TAG}"
                             docker.withRegistry( params.ECRURL, 'ecr:us-east-2:aws-creds' ) {
                             myImage.push()
@@ -110,7 +110,7 @@ pipeline {
             steps {  
                 echo 'Cleaning the docker images' 
                 script {
-                        dir ('application-code-g') {
+                        dir ('CI-Pipeline/application-code-g') {
                         sh ("docker rmi ${params.REPO}:${IMAGE_TAG}")
                         sh ("docker rmi ${ECR_REGISTRY}:${IMAGE_TAG}")
                     }
