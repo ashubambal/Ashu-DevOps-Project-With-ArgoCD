@@ -6,7 +6,7 @@ pipeline {
     environment {
                 AWS_ACCESS_KEY_ID = credentials('jenkins-aws-access-key-id')
                 AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
-                //SONAR_TOKEN = credentials('sonar-creds')
+                SONAR_TOKEN = credentials('sonar-creds')
                 DOCKERHUB_USERNAME = "softconsist"
                 APP_NAME = "DevOps-ArgoCD"
                 IMAGE_TAG = "${BUILD_NUMBER}"
@@ -24,17 +24,17 @@ pipeline {
 
 
     stages {
-        // stage ('Sonarcloud scan') {
-        //     steps {  
-        //         echo 'scanning code' 
-        //         script {
-        //             dir ('CI-Pipeline/application-code-g') {
-        //             env.SONAR_TOKEN = "${SONAR_TOKEN}"
-        //             sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=august_project_job_ci'
-        //             }
-        //         }
-        //     }  
-        // }
+        stage ('Sonarcloud scan') {
+            steps {  
+                echo 'scanning code' 
+                script {
+                    dir ('CI-Pipeline/application-code-g') {
+                    env.SONAR_TOKEN = "${SONAR_TOKEN}"
+                    sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=august_project_job_ci'
+                    }
+                }
+            }  
+        }
         
         stage ('Build jar') {
             steps {  
