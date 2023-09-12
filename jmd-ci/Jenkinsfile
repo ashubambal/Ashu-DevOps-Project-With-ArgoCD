@@ -28,7 +28,7 @@ pipeline {
         //     steps {  
         //         echo 'scanning code' 
         //         script {
-        //             dir ('application-code-g') {
+        //             dir ('CI-Pipeline/application-code-g') {
         //             env.SONAR_TOKEN = "${SONAR_TOKEN}"
         //             sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=august_project_job_ci'
         //             }
