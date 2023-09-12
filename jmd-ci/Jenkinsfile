@@ -6,35 +6,35 @@ pipeline {
     environment {
                 AWS_ACCESS_KEY_ID = credentials('jenkins-aws-access-key-id')
                 AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
-                SONAR_TOKEN = credentials('sonar-creds')
-                DOCKERHUB_USERNAME = "shivanishivani"
-                APP_NAME = "clinic09"
+                //SONAR_TOKEN = credentials('sonar-creds')
+                DOCKERHUB_USERNAME = "softconsist"
+                APP_NAME = "DevOps-ArgoCD"
                 IMAGE_TAG = "${BUILD_NUMBER}"
                 IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
                 //REGISTRY_CREDS = 'docker-creds'
-                ECRURL = "https://953423807780.dkr.ecr.us-east-2.amazonaws.com/pc-ecr"
-                ECR_REGISTRY = "953423807780.dkr.ecr.us-east-2.amazonaws.com/pc-ecr"
+                ECRURL = "733500944838.dkr.ecr.ap-south-1.amazonaws.com/devops-agrocd-project"
+                ECR_REGISTRY = "733500944838.dkr.ecr.ap-south-1.amazonaws.com/devops-agrocd-project"
                 //ECR_IMAGE_NAME = "pc-ecr"
             }
      parameters {
-     string(name: 'ECRURL', defaultValue: 'https://953423807780.dkr.ecr.us-east-2.amazonaws.com', description: 'Please Enter your Docker ECR REGISTRY URL?')
-     string(name: 'REPO', defaultValue: 'pc-ecr', description: 'Please Enter your Docker Repo Name?')
-     string(name: 'REGION', defaultValue: 'us-east-2', description: 'Please Enter your AWS Region?')
+     string(name: 'ECRURL', defaultValue: '733500944838.dkr.ecr.ap-south-1.amazonaws.com', description: 'Please Enter your Docker ECR REGISTRY URL?')
+     string(name: 'REPO', defaultValue: 'devops-agrocd-project', description: 'Please Enter your Docker Repo Name?')
+     string(name: 'REGION', defaultValue: 'ap-south-1', description: 'Please Enter your AWS Region?')
     }
 
 
     stages {
-        stage ('Sonarcloud scan') {
-            steps {  
-                echo 'scanning code' 
-                script {
-                    dir ('application-code-g') {
-                    env.SONAR_TOKEN = "${SONAR_TOKEN}"
-                    sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=august_project_job_ci'
-                    }
-                }
-            }  
-        }
+        // stage ('Sonarcloud scan') {
+        //     steps {  
+        //         echo 'scanning code' 
+        //         script {
+        //             dir ('application-code-g') {
+        //             env.SONAR_TOKEN = "${SONAR_TOKEN}"
+        //             sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=august_project_job_ci'
+        //             }
+        //         }
+        //     }  
+        // }
         
         stage ('Build jar') {
             steps {  
